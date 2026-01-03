@@ -1,4 +1,5 @@
 shop1:
+  title: "shop"
   support-items:
     - "value1"
   special-min: 1
