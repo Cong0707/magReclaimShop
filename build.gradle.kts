@@ -32,15 +32,13 @@ dependencies {
 
     compileOnly("me.clip:placeholderapi:2.11.7")
 
-    taboo("org.jetbrains.exposed:exposed-core:0.41.1")
-    taboo("org.jetbrains.exposed:exposed-dao:0.41.1")
-    taboo("org.jetbrains.exposed:exposed-java-time:0.41.1")
-    taboo("org.jetbrains.exposed:exposed-jdbc:0.41.1")
-
-    taboo("com.h2database:h2:2.2.224")
-    taboo("com.mysql:mysql-connector-j:8.0.33")
-
-    compileOnly("com.github.promcteam:proskillapi:1.1.7.6")
+//    taboo("org.jetbrains.exposed:exposed-core:0.41.1")
+//    taboo("org.jetbrains.exposed:exposed-dao:0.41.1")
+//    taboo("org.jetbrains.exposed:exposed-java-time:0.41.1")
+//    taboo("org.jetbrains.exposed:exposed-jdbc:0.41.1")
+//
+//    taboo("com.h2database:h2:2.2.224")
+//    taboo("com.mysql:mysql-connector-j:8.0.33")
 }
 
 taboolib {

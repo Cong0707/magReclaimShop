@@ -1,0 +1,3 @@
+item-info-format: "%is-special% %item-display-name% x %amount% %value-sum%"
+is-special-format: "yes"
+not-special-format: "no"

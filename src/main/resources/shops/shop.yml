@@ -1,0 +1,41 @@
+shop1:
+  support-items:
+    - "value1"
+  special-min: 1
+  special-max: 5
+
+  layout:
+    - '****xxxxx'
+    - '****xxxxx'
+    - '****xxxxx'
+    - '****xxxxx'
+    - 'aaaaaaaaa'
+    - '   yyy   '
+
+  buttons:
+    - key: "x"
+      type: putItem
+
+    - key: "a"
+      type: specialItem
+
+    - key: "y"
+      type: confirm
+      custom-material: paper
+      custom-lore:
+        - "本次非特别商品的价值 %normal-value-sum%"
+        - "本次特别商品的价值 %special-value-sum%"
+        - ""
+        - "%item-info%" #in config.yml
+      custom-name:
+      custom-model-data:
+      action:
+        - "command say %normal-value-sum% %special-value-sum%"
+
+    - key: "*"
+      type: "decoration"
+      id:
+      custom-lore:
+      custom-name:
+      custom-model-data:
+      action:

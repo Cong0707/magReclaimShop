@@ -1,0 +1,20 @@
+value1:
+  config-nbt-id: "magrdi.id"
+  config-nbt-value: "clbp_头层牛皮"
+
+  value-nbt-id: "magrdi.level"
+
+  normal-value-formula: "0.5*50000/4^((5-v))"
+  special-value-formula: "0.5*50000/4^((5-v))"
+
+  special-item-id: "paper"
+  special-item-custom-model: "1200"
+  special-item-name: "头层牛皮"
+  special-item-lore:
+    - "这是热卖商品"
+  trigger-command-on-sell: true
+
+  rules:
+    - chance: 0.3
+      action: |-
+        true
