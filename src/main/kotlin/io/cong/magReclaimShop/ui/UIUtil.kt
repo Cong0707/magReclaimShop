@@ -62,12 +62,14 @@ object UIUtil {
             }
 
             onClose { event ->
-                // 返还指定槽位的物品
-                val slots = openSlots
-                event.returnItems(slots)
+                if (!sold) {
+                    // 返还指定槽位的物品
+                    val slots = openSlots
+                    event.returnItems(slots)
 
-                val player = event.player as Player
-                player.sendMessage("§a物品已返还到你的背包")
+                    val player = event.player as Player
+                    player.sendMessage("§a物品已返还到你的背包")
+                }
             }
 
             shop.buttons.find { it.type == "specialItem" }?.let { pageButtons ->
