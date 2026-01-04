@@ -6,7 +6,9 @@ import io.cong.magReclaimShop.utils.TextUtil.format
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.ItemMeta
 import taboolib.common.platform.function.console
+import taboolib.module.kether.KetherShell.eval
 import taboolib.module.nms.getItemTag
 import taboolib.module.ui.conditionSlot
 import taboolib.module.ui.lockSlots
@@ -22,6 +24,8 @@ object UIUtil {
         val openSlots = shop.buttons.filter { it.type == "putItem" }.flatMap {
             getOpenSlots(shop, it.key)
         }
+
+        var sold = false
 
         val lockedSlots = shop.layout
             .joinToString("")
@@ -91,29 +95,50 @@ object UIUtil {
                 }.apply {
                     this.itemMeta.apply {
                         displayName(format(button.customName))
-                        lore(button.customLore.map { format(it) })
+                        lore(button.customLore.map { format(
+                            it.replace("%normal-value-sum%", "0")
+                                .replace("%special-value-sum%", "0")
+                                .replace("%item-info%", "请放入商品")
+                        ) })
                         itemMeta = this
                     }
                 }) {
-//                    val special = specialItems.contains(supportItem)
-//
-//                    val formula = if (special) {
-//                        supportItem.specialValueFormula
-//                    } else {
-//                        supportItem.normalValueFormula
-//                    }.replace("v", value)
-//
-//                    val calValue = eval("calculate $formula").get().toString().toDouble()
-//
-//                    sendMessage("价值$calValue * ${itemStack.amount}")
-//
-//                    if (special) {
-//                        specialValueMap.set(slot, calValue * itemStack.amount)
-//                    } else {
-//                        normalValueMap.set(slot, calValue * itemStack.amount)
-//                    }
+                    val items = openSlots.mapNotNull { inventory.getItem(it) }
+
+                    val normalValueMap = mutableMapOf<Int, Double>()
+                    val specialValueMap = mutableMapOf<Int, Double>()
+                    items.forEach { itemStack ->
+                        shop.supportItems.forEach { supportItem ->
+                            val value = checkItemValue(itemStack, supportItem)!!
+                            val special = specialItems.contains(supportItem)
+
+                            val formula = if (special) {
+                                supportItem.specialValueFormula
+                            } else {
+                                supportItem.normalValueFormula
+                            }.replace("v", value)
+
+                            val calValue = eval("calculate $formula").get().toString().toDouble()
+
+                            if (special) {
+                                specialValueMap.set(rawSlot, calValue * itemStack.amount)
+                            } else {
+                                normalValueMap.set(rawSlot, calValue * itemStack.amount)
+                            }
+                        }
+                    }
+
                     button.action.forEach {
-                        console().performCommand(it)
+                        val normalSum = normalValueMap.values.sum()
+                        val specialSum = specialValueMap.values.sum()
+                        if (normalSum != 0.toDouble() && specialSum != 0.toDouble()) {
+                            console().performCommand(
+                                it.replace("%normal-value-sum%", normalSum.toString())
+                                    .replace("%special-value-sum%", specialSum.toString())
+                            )
+                            sold = true
+                            openShop(shop)
+                        }
                     }
                 }
             }
