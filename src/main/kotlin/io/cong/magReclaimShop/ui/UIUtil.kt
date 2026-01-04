@@ -12,16 +12,17 @@ import taboolib.module.kether.KetherShell.eval
 import taboolib.module.nms.getItemTag
 import taboolib.module.ui.amountCondition
 import taboolib.module.ui.openMenu
+import taboolib.module.ui.returnItems
 import taboolib.module.ui.type.StorableChest
 import taboolib.platform.util.buildItem
 
 object UIUtil {
     fun Player.openShop(shop: Shop) {
-        val specialItems = listOf(MagReclaimShop.values[0])
-        sendMessage(specialItems.toString())
+        val specialItems = listOf(shop.supportItems[0])
 
-        val normalValueMap = mutableMapOf<Int, Double>()
-        val specialValueMap = mutableMapOf<Int, Double>()
+        val openSlots = shop.buttons.filter { it.type == "putItem" }.flatMap {
+            getOpenSlots(shop, it.key)
+        }
 
         openMenu<StorableChest>(title = shop.title) {
             rows(shop.layout.size)
@@ -29,18 +30,16 @@ object UIUtil {
             map(*shop.layout.toTypedArray())
 
             rule {
-                val openSlots = shop.buttons.filter { it.type == "putItem" }.flatMap {
-                    getOpenSlots(shop, it.key)
-                }
-
                 openSlots.forEach { slot ->
                     checkSlot(slot) { inventory, itemStack ->
+                        if (slot !in openSlots) return@checkSlot false
+                        if (inventory.getItem(slot) != null) return@checkSlot true
+
                         shop.supportItems.forEach { supportItem ->
                             val value = checkItemValue(
                                 itemStack,
                                 supportItem
                             )
-
                             if (value != null) {
                                 return@checkSlot true
                             }
@@ -57,43 +56,22 @@ object UIUtil {
                     } ?: -1
                 }
 
-                // 物品写入回调
-                writeItem { inventory, itemStack, slot, clickType ->
-                    shop.supportItems.forEach { supportItem ->
-                        val value = checkItemValue(
-                            itemStack,
-                            supportItem
-                        )!!
-
-                        val special = specialItems.contains(supportItem)
-
-                        val formula = if (special) {
-                            supportItem.specialValueFormula
-                        } else {
-                            supportItem.normalValueFormula
-                        }.replace("v", value)
-
-                        val calValue = eval("calculate $formula").get().toString().toDouble()
-
-                        if (special) {
-                            specialValueMap.set(slot, calValue * itemStack.amount)
-                        } else {
-                            normalValueMap.set(slot, calValue * itemStack.amount)
-                        }
-                    }
+                writeItem { inventory, itemStack, slot, _ ->
+                    inventory.setItem(slot, itemStack.clone())
                 }
 
-                // 物品读取回调
                 readItem { inventory, slot ->
-                    specialValueMap.remove(slot)
-                    normalValueMap.remove(slot)
                     inventory.getItem(slot)
                 }
+            }
 
-                // Shift 交换规则（2025-10-27 添加）
-                shiftSwap { inventory, itemStack, slot ->
-                    false //会吞东西
-                }
+            onClose { event ->
+                // 返还指定槽位的物品
+                val slots = openSlots
+                event.returnItems(slots)
+
+                val player = event.player as Player
+                player.sendMessage("§a物品已返还到你的背包")
             }
 
             shop.buttons.find { it.type == "specialItem" }?.let { pageButtons ->
@@ -125,6 +103,23 @@ object UIUtil {
                         itemMeta = this
                     }
                 }) {
+//                    val special = specialItems.contains(supportItem)
+//
+//                    val formula = if (special) {
+//                        supportItem.specialValueFormula
+//                    } else {
+//                        supportItem.normalValueFormula
+//                    }.replace("v", value)
+//
+//                    val calValue = eval("calculate $formula").get().toString().toDouble()
+//
+//                    sendMessage("价值$calValue * ${itemStack.amount}")
+//
+//                    if (special) {
+//                        specialValueMap.set(slot, calValue * itemStack.amount)
+//                    } else {
+//                        normalValueMap.set(slot, calValue * itemStack.amount)
+//                    }
                     button.action.forEach {
                         console().performCommand(it)
                     }
@@ -173,7 +168,11 @@ object UIUtil {
         itemStack: ItemStack,
         item: Value
     ): String? {
-        val itemTag = itemStack.getItemTag()
+        val itemTag = try {
+            itemStack.getItemTag()
+        } catch (e: Exception) {
+            return null
+        }
 
         // 读取 configNBT
         val configValue = itemTag.getDeep(item.configNBTID)?.asString()
