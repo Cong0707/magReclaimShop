@@ -17,7 +17,8 @@ import taboolib.platform.util.buildItem
 
 object UIUtil {
     fun Player.openShop(shop: Shop) {
-        val specialItems = listOf(MagReclaimShop.values[1])
+        val specialItems = listOf(MagReclaimShop.values[0])
+        sendMessage(specialItems.toString())
 
         val normalValueMap = mutableMapOf<Int, Double>()
         val specialValueMap = mutableMapOf<Int, Double>()
@@ -105,7 +106,7 @@ object UIUtil {
                 }
             }
 
-            shop.buttons.find { it.type == "show" }?.let { pageButtons ->
+            shop.buttons.find { it.type == "specialItem" }?.let { pageButtons ->
                 val slots = getSlots(pageButtons.key)
 
                 slots.zip(specialItems).forEach {
