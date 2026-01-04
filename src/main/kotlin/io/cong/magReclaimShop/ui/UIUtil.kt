@@ -9,8 +9,11 @@ import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import taboolib.common.platform.function.adaptCommandSender
 import taboolib.common.platform.function.console
+import taboolib.module.kether.KetherShell
 import taboolib.module.kether.KetherShell.eval
+import taboolib.module.kether.ScriptOptions
 import taboolib.module.nms.getItemTag
 import taboolib.module.ui.conditionSlot
 import taboolib.module.ui.lockSlots
@@ -192,6 +195,48 @@ object UIUtil {
                                 it.replace("%normal-value-sum%", normalSum.toString())
                                     .replace("%special-value-sum%", specialSum.toString())
                             )
+
+                            val valueAmountMap = mutableMapOf<Value, Int>()
+
+                            openSlots.forEach value@{ slot ->
+                                val item = inventory.getItem(slot) ?: return@value
+                                if (item.type == Material.AIR) return@value
+
+                                shop.supportItems.forEach { value ->
+                                    val v = checkItemValue(item, value)
+                                    if (v != null) {
+                                        valueAmountMap[value] =
+                                            (valueAmountMap[value] ?: 0) + item.amount
+                                        return@value
+                                    }
+                                }
+                            }
+
+                            valueAmountMap.forEach {
+                                for (i in 0..it.value) {
+                                    val ketherRules = it.key.rules
+                                    if (ketherRules.isNotEmpty()) {
+                                        ketherRules.filter {
+                                            eval(
+                                                it.rule, options = ScriptOptions(
+                                                    sender = adaptCommandSender(this.clicker)
+                                                )
+                                            ).get()
+                                                .toString()
+                                                .toBooleanStrictOrNull() == true
+                                        }.filter {
+                                            Math.random() < it.chance
+                                        }.map {
+                                            eval(
+                                                it.action, options = ScriptOptions(
+                                                    sender = adaptCommandSender(this.clicker)
+                                                )
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
                             sold.set(true)
                             openShop(shop)
                         }
