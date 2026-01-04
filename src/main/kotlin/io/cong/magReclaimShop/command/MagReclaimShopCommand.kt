@@ -37,4 +37,12 @@ object MagReclaimShopCommand {
         }
 
     }
+
+    @CommandBody
+    val reload = subCommand {
+        execute<CommandSender> { sender, context, _ ->
+            plugin.settings.unload()
+            plugin.settings.load()
+        }
+    }
 }
