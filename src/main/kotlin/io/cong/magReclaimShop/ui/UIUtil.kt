@@ -1,6 +1,5 @@
 package io.cong.magReclaimShop.ui
 
-import io.cong.magReclaimShop.MagReclaimShop
 import io.cong.magReclaimShop.types.Shop
 import io.cong.magReclaimShop.types.Value
 import io.cong.magReclaimShop.utils.TextUtil.format
@@ -8,12 +7,12 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import taboolib.common.platform.function.console
-import taboolib.module.kether.KetherShell.eval
 import taboolib.module.nms.getItemTag
-import taboolib.module.ui.amountCondition
+import taboolib.module.ui.conditionSlot
+import taboolib.module.ui.lockSlots
 import taboolib.module.ui.openMenu
 import taboolib.module.ui.returnItems
-import taboolib.module.ui.type.StorableChest
+import taboolib.module.ui.type.Chest
 import taboolib.platform.util.buildItem
 
 object UIUtil {
@@ -24,45 +23,38 @@ object UIUtil {
             getOpenSlots(shop, it.key)
         }
 
-        openMenu<StorableChest>(title = shop.title) {
+        val lockedSlots = shop.layout
+            .joinToString("")
+            .mapIndexedNotNull { index, c ->
+                if (index !in openSlots) index else null
+            }
+
+        openMenu<Chest>(title = shop.title) {
             rows(shop.layout.size)
 
             map(*shop.layout.toTypedArray())
 
-            rule {
+            onClick(lock = false) { event ->
                 openSlots.forEach { slot ->
-                    checkSlot(slot) { inventory, itemStack ->
-                        if (slot !in openSlots) return@checkSlot false
-                        if (inventory.getItem(slot) != null) return@checkSlot true
-
-                        shop.supportItems.forEach { supportItem ->
-                            val value = checkItemValue(
-                                itemStack,
-                                supportItem
-                            )
-                            if (value != null) {
-                                return@checkSlot true
+                    event.conditionSlot(slot,
+                        condition = { put, out ->
+                            if (put != null) {
+                                if (put.type == Material.AIR) return@conditionSlot true
+                                shop.supportItems.forEach { supportItem ->
+                                    val value = checkItemValue(put, supportItem)
+                                    if (value != null) {
+                                        return@conditionSlot true
+                                    }
+                                }
+                                false
+                            } else {
+                                true  // 允许取出
                             }
                         }
-                        false
-                    }
+                    )
                 }
 
-
-                firstSlot { inventory, itemStack ->
-                    openSlots.firstOrNull { slot ->
-                        val item = inventory.getItem(slot)
-                        item == null || item.type == Material.AIR
-                    } ?: -1
-                }
-
-                writeItem { inventory, itemStack, slot, _ ->
-                    inventory.setItem(slot, itemStack.clone())
-                }
-
-                readItem { inventory, slot ->
-                    inventory.getItem(slot)
-                }
+                event.lockSlots(lockedSlots)
             }
 
             onClose { event ->
@@ -137,21 +129,6 @@ object UIUtil {
                         itemMeta = this
                     }
                 })
-            }
-
-            onClick(lock = false) { event ->
-                val slotA = getFirstSlot('A')
-                val slotB = getFirstSlot('B')
-
-                // A 槽位：最多 10 个
-                event.amountCondition(slotA, amount = 10) {
-                    event.clicker.sendMessage("§c该槽位最多只能放 10 个物品！")
-                }
-
-                // B 槽位：最多 1 个（单个物品）
-                event.amountCondition(slotB, amount = 1) {
-                    event.clicker.sendMessage("§c该槽位只能放 1 个物品！")
-                }
             }
         }
     }
