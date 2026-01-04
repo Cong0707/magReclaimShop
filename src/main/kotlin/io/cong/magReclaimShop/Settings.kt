@@ -56,8 +56,8 @@ class Settings(val plugin: MagReclaimShop) {
             valueNBTID = configuration.getString("value-nbt-id") ?: "",
             normalValueFormula = configuration.getString("normal-value-formula") ?: "",
             specialValueFormula = configuration.getString("special-value-formula") ?: "",
-            specialItemID = configuration.getString("special-item-id") ?: "",
-            specialItemCustomModel = configuration.getString("special-item-custom-model") ?: "",
+            specialItemMaterial = Material.matchMaterial(configuration.getString("special-item-material") ?: "STONE") ?: Material.STONE,
+            specialItemCustomModel = configuration.getInt("special-item-custom-model") ?: 0,
             specialItemName = configuration.getString("special-item-name") ?: "",
             specialItemLore = configuration.getStringList("special-item-lore"),
             triggerCommandOnSell = configuration.getBoolean("trigger-command-on-sell"),
@@ -103,8 +103,8 @@ class Settings(val plugin: MagReclaimShop) {
             supportItems = supportItems,
             specialMin = configuration.getInt("special-min"),
             specialMax = configuration.getInt("special-max"),
-            craftingLayout = configuration.getStringList("layout"),
-            craftingButtons = buttons
+            layout = configuration.getStringList("layout"),
+            buttons = buttons
         )
     }
 

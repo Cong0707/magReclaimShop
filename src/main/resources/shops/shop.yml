@@ -34,7 +34,7 @@ shop1:
         - "command say %normal-value-sum% %special-value-sum%"
 
     - key: "*"
-      type: "decoration"
+      type: decoration
       id:
       custom-lore:
       custom-name:
