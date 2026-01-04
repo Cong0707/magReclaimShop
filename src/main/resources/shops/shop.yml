@@ -28,15 +28,16 @@ shop1:
         - "本次特别商品的价值 %special-value-sum%"
         - ""
         - "%item-info%" #in config.yml
-      custom-name:
-      custom-model-data:
+      custom-name: "确定"
+      custom-model-data: 0
       action:
         - "command say %normal-value-sum% %special-value-sum%"
 
     - key: "*"
       type: decoration
-      id:
+      custom-material: red_stained_glass_pane
+      custom-name: ""
       custom-lore:
-      custom-name:
-      custom-model-data:
+        - ""
+      custom-model-data: 0
       action:

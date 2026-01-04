@@ -48,7 +48,7 @@ taboolib {
             name("cong0707")
         }
         dependencies {
-            name("PlaceholderAPI")
+            //name("PlaceholderAPI")
         }
     }
     env {
