@@ -22,8 +22,6 @@ object TextUtil {
     }
 
     fun Component.toLegacy(): String {
-        return LegacyComponentSerializer
-            .legacyAmpersand()
-            .serialize(this)
+        return mm.serialize(this)
     }
 }

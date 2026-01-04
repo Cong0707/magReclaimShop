@@ -13,6 +13,8 @@ import java.io.File
 class Settings(val plugin: MagReclaimShop) {
     companion object {
         lateinit var itemInfoFormat: String
+        lateinit var isSpecialFormat: String
+        lateinit var notSpecialFormat: String
     }
 
     fun load() {
@@ -31,6 +33,9 @@ class Settings(val plugin: MagReclaimShop) {
         val config = Configuration.loadFromFile(configYml)
 
         itemInfoFormat = config.getString("item-info-format") ?: ""
+        isSpecialFormat = config.getString("is-special-format") ?: "yes"
+        notSpecialFormat = config.getString("not-special-format") ?: "no"
+
     }
 
     fun loadValues() {

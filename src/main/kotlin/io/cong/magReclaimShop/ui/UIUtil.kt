@@ -1,8 +1,11 @@
 package io.cong.magReclaimShop.ui
 
+import io.cong.magReclaimShop.Settings
 import io.cong.magReclaimShop.types.Shop
 import io.cong.magReclaimShop.types.Value
 import io.cong.magReclaimShop.utils.TextUtil.format
+import io.cong.magReclaimShop.utils.TextUtil.toLegacy
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -13,7 +16,7 @@ import taboolib.module.ui.conditionSlot
 import taboolib.module.ui.lockSlots
 import taboolib.module.ui.openMenu
 import taboolib.module.ui.returnItems
-import taboolib.module.ui.type.Chest
+import taboolib.module.ui.type.StorableChest
 import taboolib.platform.util.buildItem
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -33,7 +36,10 @@ object UIUtil {
                 if (index !in openSlots) index else null
             }
 
-        openMenu<Chest>(title = shop.title) {
+        val normalValueMap = mutableMapOf<Int, Double>()
+        val specialValueMap = mutableMapOf<Int, Double>()
+
+        openMenu<StorableChest>(title = shop.title) {
             rows(shop.layout.size)
 
             map(*shop.layout.toTypedArray())
@@ -59,6 +65,79 @@ object UIUtil {
                 }
 
                 event.lockSlots(lockedSlots)
+            }
+
+            rule {
+                firstSlot { inventory, itemStack ->
+                    openSlots.firstOrNull { slot ->
+                        val item = inventory.getItem(slot)
+                        item == null || item.type == Material.AIR
+                    } ?: -1
+                }
+
+                writeItem { inventory, itemStack, slot, type ->
+                    inventory.setItem(slot, itemStack.clone())
+
+                    val items = openSlots.filter { inventory.getItem(it) != null }.map { it to inventory.getItem(it) }
+
+                    specialValueMap.clear()
+                    normalValueMap.clear()
+
+                    items.forEach { item ->
+                        shop.supportItems.forEach { supportItem ->
+                            val value = checkItemValue(item.second!!, supportItem)!!
+                            val special = specialItems.contains(supportItem)
+
+                            val formula = if (special) {
+                                supportItem.specialValueFormula
+                            } else {
+                                supportItem.normalValueFormula
+                            }.replace("v", value)
+
+                            val calValue = eval("calculate $formula").get().toString().toDouble()
+
+                            if (special) {
+                                specialValueMap.set(item.first, calValue * item.second!!.amount)
+                            } else {
+                                normalValueMap.set(item.first, calValue * item.second!!.amount)
+                            }
+                        }
+                    }
+
+                    shop.buttons.filter { it.type == "confirm" }.forEach { button ->
+                        getSlots(button.key).forEach { slot ->
+                            inventory.setItem(slot, buildItem(button.customMaterial) {
+                                customModelData = button.customModelData
+                                colored()
+                            }.apply {
+                                this.itemMeta.apply {
+                                    displayName(format(button.customName))
+                                    lore(button.customLore.flatMap {
+                                        if (it == "%item-info%") {
+                                            items.map { (slot, itemStack) ->
+                                                    Settings.itemInfoFormat
+                                                        .replace("%is-special%", if (specialValueMap.keys.contains(slot)) Settings.isSpecialFormat else Settings.notSpecialFormat)
+                                                        .replace("%item-display-name%", itemStack!!.clone().displayName().toLegacy())
+                                                        .replace("%amount%", itemStack.clone().amount.toString())
+                                                        .replace("%value-sum%", (if (specialValueMap.keys.contains(slot)) specialValueMap[slot] else normalValueMap[slot]).toString())
+                                                }
+                                        } else {
+                                            listOf(
+                                                it.replace("%normal-value-sum%", normalValueMap.values.sum().toString())
+                                                .replace("%special-value-sum%", specialValueMap.values.sum().toString())
+                                            )
+                                        }
+                                    }.map { format(it) })
+                                    itemMeta = this
+                                }
+                            })
+                        }
+                    }
+                }
+
+                readItem { inventory, slot ->
+                    inventory.getItem(slot)
+                }
             }
 
             onClose { event ->
@@ -105,31 +184,6 @@ object UIUtil {
                         itemMeta = this
                     }
                 }) {
-                    val items = openSlots.mapNotNull { inventory.getItem(it) }
-
-                    val normalValueMap = mutableMapOf<Int, Double>()
-                    val specialValueMap = mutableMapOf<Int, Double>()
-                    items.forEach { itemStack ->
-                        shop.supportItems.forEach { supportItem ->
-                            val value = checkItemValue(itemStack, supportItem)!!
-                            val special = specialItems.contains(supportItem)
-
-                            val formula = if (special) {
-                                supportItem.specialValueFormula
-                            } else {
-                                supportItem.normalValueFormula
-                            }.replace("v", value)
-
-                            val calValue = eval("calculate $formula").get().toString().toDouble()
-
-                            if (special) {
-                                specialValueMap.set(rawSlot, calValue * itemStack.amount)
-                            } else {
-                                normalValueMap.set(rawSlot, calValue * itemStack.amount)
-                            }
-                        }
-                    }
-
                     button.action.forEach {
                         val normalSum = normalValueMap.values.sum()
                         val specialSum = specialValueMap.values.sum()
@@ -158,14 +212,6 @@ object UIUtil {
                 })
             }
         }
-    }
-
-    fun getSlots(key: Char, shop: Shop): List<Int> {
-        return shop.layout
-            .joinToString("")
-            .mapIndexedNotNull { index, c ->
-                if (c == key) index else null
-            }
     }
 
     fun getOpenSlots(shop: Shop, key: Char): List<Int> {
