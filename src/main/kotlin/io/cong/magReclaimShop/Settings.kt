@@ -24,7 +24,7 @@ class Settings(val plugin: MagReclaimShop) {
         var user: String = "root"
         var password: String = "12345678"
         var database: String = "server"
-        var prefix: String = "magrs_"
+        var prefix: String = "magreclaimshop_"
     }
 
     fun load() {
@@ -54,7 +54,7 @@ class Settings(val plugin: MagReclaimShop) {
         user = config.getString("database.user") ?: "root"
         password = config.getString("database.password") ?: "password"
         database = config.getString("database.database") ?: "server"
-        prefix = config.getString("database.prefix") ?: "magrs_"
+        prefix = config.getString("database.prefix") ?: "magreclaimshop_"
     }
 
     fun loadValues() {

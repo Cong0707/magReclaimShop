@@ -1,3 +1,12 @@
 item-info-format: "%is-special% %item-display-name% x %amount% %value-sum%"
 is-special-format: "yes"
 not-special-format: "no"
+
+db-debug: true
+database:
+  host: 127.0.0.1
+  port: 3306
+  user: root
+  password: root123
+  database: minecraft_server
+  prefix: "magreclaimshop_"
