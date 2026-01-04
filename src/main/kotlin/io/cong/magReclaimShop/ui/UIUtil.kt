@@ -1,6 +1,10 @@
 package io.cong.magReclaimShop.ui
 
+import io.cong.magReclaimShop.MagReclaimShop
 import io.cong.magReclaimShop.Settings
+import io.cong.magReclaimShop.database.SpecialItemsDB
+import io.cong.magReclaimShop.database.SpecialItemsDB.specialItemsRecord
+import io.cong.magReclaimShop.database.SpecialItemsDB.uuid
 import io.cong.magReclaimShop.types.Shop
 import io.cong.magReclaimShop.types.Value
 import io.cong.magReclaimShop.utils.TextUtil.format
@@ -20,10 +24,42 @@ import taboolib.module.ui.returnItems
 import taboolib.module.ui.type.StorableChest
 import taboolib.platform.util.buildItem
 import java.util.concurrent.atomic.AtomicBoolean
+import org.jetbrains.exposed.sql.*
 
 object UIUtil {
     fun Player.openShop(shop: Shop) {
-        val specialItems = listOf(shop.supportItems[0])
+        val record = SpecialItemsDB
+            .select {
+                (uuid eq uniqueId.toString()) and
+                        (SpecialItemsDB.shop eq shop.title)
+            }
+            .singleOrNull()
+
+        val str = if (record != null) {
+            record[specialItemsRecord]
+        } else {
+            val count = (shop.specialMin..shop.specialMax).random()
+            val specialItems =
+                shop.supportItems
+                    .shuffled()
+                    .take(count)
+
+            val serialized = specialItems.map { it.name }.toString()
+
+            SpecialItemsDB.insert {
+                it[uuid] = uniqueId.toString()
+                it[SpecialItemsDB.shop] = shop.title
+                it[specialItemsRecord] = serialized
+            }
+
+            serialized
+        }
+
+        val specialItems = str
+            .removePrefix("[")
+            .removeSuffix("]")
+            .split(", ")
+            .mapNotNull { MagReclaimShop.values.find { item -> item.name == it } }
 
         val openSlots = shop.buttons.filter { it.type == "putItem" }.flatMap {
             getOpenSlots(shop, it.key)

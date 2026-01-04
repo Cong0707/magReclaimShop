@@ -1,7 +1,11 @@
 package io.cong.magReclaimShop.database
 
 import io.cong.magReclaimShop.Settings
+import io.cong.magReclaimShop.types.Shop
+import io.cong.magReclaimShop.types.Value
+import org.bukkit.entity.Player
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import taboolib.common.platform.function.getDataFolder
 import java.sql.Connection
@@ -32,5 +36,39 @@ object DBUtil {
 
     fun unloadDatabase() {
         //do nothing
+    }
+
+    fun get(player: Player, shop: Shop): List<Value>? {
+        return transaction {
+            SpecialItemsDB
+                .select {
+                    (SpecialItemsDB.uuid eq player.uniqueId.toString()) and
+                            (SpecialItemsDB.shop eq shop.id)
+                }
+                .firstOrNull()
+                ?.get(SpecialItemsDB.specialItemsRecord)
+        }?.let {
+            deserialize(it) // 你已有的方法
+        }
+    }
+
+    fun save(player: Player, shop: Shop, items: List<Value>) {
+        val data = serialize(items) // 你已有的方法
+        transaction {
+            SpecialItemsDB.insert {
+                it[uuid] = player.uniqueId.toString()
+                it[this.shop] = shop.id
+                it[specialItemsRecord] = data
+            }
+        }
+    }
+
+    fun delete(player: Player, shop: Shop) {
+        transaction {
+            SpecialItemsDB.deleteWhere {
+                (uuid eq player.uniqueId.toString()) and
+                        (this.shop eq shop.title)
+            }
+        }
     }
 }
