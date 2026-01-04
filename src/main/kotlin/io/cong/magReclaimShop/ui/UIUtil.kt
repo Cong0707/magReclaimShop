@@ -6,7 +6,6 @@ import io.cong.magReclaimShop.utils.TextUtil.format
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.ItemMeta
 import taboolib.common.platform.function.console
 import taboolib.module.kether.KetherShell.eval
 import taboolib.module.nms.getItemTag
@@ -16,6 +15,7 @@ import taboolib.module.ui.openMenu
 import taboolib.module.ui.returnItems
 import taboolib.module.ui.type.Chest
 import taboolib.platform.util.buildItem
+import java.util.concurrent.atomic.AtomicBoolean
 
 object UIUtil {
     fun Player.openShop(shop: Shop) {
@@ -25,7 +25,7 @@ object UIUtil {
             getOpenSlots(shop, it.key)
         }
 
-        var sold = false
+        val sold = AtomicBoolean(false)
 
         val lockedSlots = shop.layout
             .joinToString("")
@@ -62,7 +62,7 @@ object UIUtil {
             }
 
             onClose { event ->
-                if (!sold) {
+                if (!sold.get()) {
                     // 返还指定槽位的物品
                     val slots = openSlots
                     event.returnItems(slots)
@@ -138,7 +138,7 @@ object UIUtil {
                                 it.replace("%normal-value-sum%", normalSum.toString())
                                     .replace("%special-value-sum%", specialSum.toString())
                             )
-                            sold = true
+                            sold.set(true)
                             openShop(shop)
                         }
                     }
@@ -158,6 +158,14 @@ object UIUtil {
                 })
             }
         }
+    }
+
+    fun getSlots(key: Char, shop: Shop): List<Int> {
+        return shop.layout
+            .joinToString("")
+            .mapIndexedNotNull { index, c ->
+                if (c == key) index else null
+            }
     }
 
     fun getOpenSlots(shop: Shop, key: Char): List<Int> {
