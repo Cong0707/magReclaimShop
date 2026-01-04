@@ -1,5 +1,6 @@
 package io.cong.magReclaimShop
 
+import io.cong.magReclaimShop.database.DBUtil.loadDatabase
 import io.cong.magReclaimShop.types.ButtonConfig
 import io.cong.magReclaimShop.types.KetherRule
 import io.cong.magReclaimShop.types.Shop
@@ -15,10 +16,20 @@ class Settings(val plugin: MagReclaimShop) {
         lateinit var itemInfoFormat: String
         lateinit var isSpecialFormat: String
         lateinit var notSpecialFormat: String
+
+        var dbDebug: Boolean = true
+
+        var host: String = "127.0.0.1"
+        var port: Int = 3306
+        var user: String = "root"
+        var password: String = "12345678"
+        var database: String = "server"
+        var prefix: String = "magrs_"
     }
 
     fun load() {
         loadConfig()
+        loadDatabase()
         loadValues()
         loadShops()
     }
@@ -36,6 +47,14 @@ class Settings(val plugin: MagReclaimShop) {
         isSpecialFormat = config.getString("is-special-format") ?: "yes"
         notSpecialFormat = config.getString("not-special-format") ?: "no"
 
+        dbDebug = config.getBoolean("db-debug", true)
+
+        host = config.getString("database.host") ?: "localhost"
+        port = config.getInt("database.port")
+        user = config.getString("database.user") ?: "root"
+        password = config.getString("database.password") ?: "password"
+        database = config.getString("database.database") ?: "server"
+        prefix = config.getString("database.prefix") ?: "magrs_"
     }
 
     fun loadValues() {

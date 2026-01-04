@@ -5,13 +5,11 @@ import io.cong.magReclaimShop.types.Shop
 import io.cong.magReclaimShop.types.Value
 import io.cong.magReclaimShop.utils.TextUtil.format
 import io.cong.magReclaimShop.utils.TextUtil.toLegacy
-import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import taboolib.common.platform.function.adaptCommandSender
 import taboolib.common.platform.function.console
-import taboolib.module.kether.KetherShell
 import taboolib.module.kether.KetherShell.eval
 import taboolib.module.kether.ScriptOptions
 import taboolib.module.nms.getItemTag
