@@ -1,8 +1,10 @@
 package io.cong.magReclaimShop.ui
 
+import io.cong.magReclaimShop.MagReclaimShop
 import io.cong.magReclaimShop.types.Shop
+import io.cong.magReclaimShop.utils.TextUtil.format
 import org.bukkit.entity.Player
-import taboolib.library.xseries.XMaterial
+import taboolib.common.platform.function.console
 import taboolib.module.ui.amountCondition
 import taboolib.module.ui.openMenu
 import taboolib.module.ui.type.Chest
@@ -11,25 +13,58 @@ import taboolib.platform.util.buildItem
 object UIUtil {
     fun Player.openShop(shop: Shop) {
         openMenu<Chest>(title = "数量限制菜单") {
-            rows(3)
+            rows(shop.layout.size)
 
-            map(
-                "#########",
-                "# A   B #",
-                "#########"
-            )
+            map(*shop.layout.toTypedArray())
 
-            set('#', XMaterial.GRAY_STAINED_GLASS_PANE) { name = " " }
+            shop.buttons.find { it.type == "show" }?.let { pageButtons ->
+                val slots = getSlots(pageButtons.key)
+                val items = listOf(MagReclaimShop.values[1])
 
-            set('A', buildItem(XMaterial.CHEST) {
-                name = "§e限制 10 个"
-                lore += "§7最多只能放 10 个物品"
-            })
+                slots.zip(items).forEach {
+                    val item = it.second ?: return@forEach
+                    set(it.first, buildItem(item.specialItemMaterial) {
+                        customModelData = item.specialItemCustomModel
+                        colored()
+                    }.apply {
+                        this.itemMeta.apply {
+                            displayName(format(item.specialItemName))
+                            lore(item.specialItemLore.map { format(it) })
+                            itemMeta = this
+                        }
+                    })
+                }
+            }
 
-            set('B', buildItem(XMaterial.BARREL) {
-                name = "§e限制 1 个"
-                lore += "§7最多只能放 1 个物品"
-            })
+            shop.buttons.filter { it.type == "confirm" }.forEach { button ->
+                set(button.key, buildItem(button.customMaterial) {
+                    customModelData = button.customModelData
+                    colored()
+                }.apply {
+                    this.itemMeta.apply {
+                        displayName(format(button.customName))
+                        lore(button.customLore.map { format(it) })
+                        itemMeta = this
+                    }
+                }) {
+                    button.action.forEach {
+                        console().performCommand(it)
+                    }
+                }
+            }
+
+            shop.buttons.filter { it.type == "decoration" }.forEach { button ->
+                set(button.key, buildItem(button.customMaterial) {
+                    customModelData = button.customModelData
+                    colored()
+                }.apply {
+                    this.itemMeta.apply {
+                        displayName(format(button.customName))
+                        lore(button.customLore.map { format(it) })
+                        itemMeta = this
+                    }
+                })
+            }
 
             onClick(lock = false) { event ->
                 val slotA = getFirstSlot('A')
