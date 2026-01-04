@@ -1,4 +1,6 @@
-value1:
+1:
+  name: "value1"
+
   config-nbt-id: "magrdi.id"
   config-nbt-value: "clbp_头层牛皮"
 

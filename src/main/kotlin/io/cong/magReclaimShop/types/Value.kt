@@ -3,6 +3,7 @@ package io.cong.magReclaimShop.types
 import org.bukkit.Material
 
 data class Value(
+    val name: String,
     val configNBTID: String,
     val configNBTValue: String,
     val valueNBTID: String,

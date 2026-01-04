@@ -51,6 +51,7 @@ class Settings(val plugin: MagReclaimShop) {
         val rulesSection = configuration.getMapList("rules")
 
         return Value(
+            name = configuration.getString("id") ?: "",
             configNBTID = configuration.getString("config-nbt-id") ?: "",
             configNBTValue = configuration.getString("config-nbt-value") ?: "",
             valueNBTID = configuration.getString("value-nbt-id") ?: "",
@@ -81,7 +82,7 @@ class Settings(val plugin: MagReclaimShop) {
 
     fun loadShopsSettings(configuration: ConfigurationSection): Shop {
         val supportItems = configuration.getStringList("support-items")
-            .mapNotNull { id -> plugin.values.find { it.configNBTValue == id } }
+            .mapNotNull { id -> plugin.values.find { it.name == id } }
 
         val buttons = configuration.getMapList("buttons").mapNotNull { map ->
             val keyStr = map["key"] as? String ?: return@mapNotNull null
