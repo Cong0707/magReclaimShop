@@ -51,7 +51,7 @@ class Settings(val plugin: MagReclaimShop) {
         val rulesSection = configuration.getMapList("rules")
 
         return Value(
-            name = configuration.getString("id") ?: "",
+            name = configuration.getString("name") ?: "",
             configNBTID = configuration.getString("config-nbt-id") ?: "",
             configNBTValue = configuration.getString("config-nbt-value") ?: "",
             valueNBTID = configuration.getString("value-nbt-id") ?: "",
