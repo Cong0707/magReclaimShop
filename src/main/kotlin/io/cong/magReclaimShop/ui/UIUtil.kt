@@ -187,7 +187,7 @@ object UIUtil {
                     button.action.forEach {
                         val normalSum = normalValueMap.values.sum()
                         val specialSum = specialValueMap.values.sum()
-                        if (normalSum != 0.toDouble() && specialSum != 0.toDouble()) {
+                        if (normalSum != 0.0 || specialSum != 0.0) {
                             console().performCommand(
                                 it.replace("%normal-value-sum%", normalSum.toString())
                                     .replace("%special-value-sum%", specialSum.toString())
