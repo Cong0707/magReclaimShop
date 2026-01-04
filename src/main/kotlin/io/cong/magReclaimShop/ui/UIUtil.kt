@@ -92,17 +92,7 @@ object UIUtil {
 
                 // Shift 交换规则（2025-10-27 添加）
                 shiftSwap { inventory, itemStack, slot ->
-                    shop.supportItems.forEach { supportItem ->
-                        val value = checkItemValue(
-                            itemStack,
-                            supportItem
-                        )
-
-                        if (value != null) {
-                            return@shiftSwap true
-                        }
-                    }
-                    false
+                    false //会吞东西
                 }
             }
 
