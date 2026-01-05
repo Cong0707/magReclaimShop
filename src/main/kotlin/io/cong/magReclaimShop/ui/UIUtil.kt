@@ -181,9 +181,8 @@ object UIUtil {
                     // 返还指定槽位的物品
                     val slots = openSlots
                     event.returnItems(slots)
-
-                    val player = event.player as Player
-                    player.sendMessage("§a物品已返还到你的背包")
+//                    val player = event.player as Player
+//                    player.sendMessage("§a物品已返还到你的背包")
                 }
             }
 
@@ -310,13 +309,11 @@ object UIUtil {
             return null
         }
 
-        // 读取 configNBT
-        val configValue = itemTag.getDeep(item.configNBTID)?.asString()
+        val configValue = itemTag.get(item.configNBTID)?.asString()
         if (configValue != item.configNBTValue) {
             return null
         }
 
-        // 获取 valueNBT
-        return itemTag.getDeep(item.valueNBTID)?.asString()
+        return itemTag.get(item.valueNBTID)?.asString()
     }
 }
