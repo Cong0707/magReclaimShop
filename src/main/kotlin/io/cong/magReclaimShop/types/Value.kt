@@ -9,6 +9,7 @@ data class Value(
     val valueNBTID: String,
     val normalValueFormula: String,
     val specialValueFormula: String,
+    val displayItemName: String,
     val specialItemMaterial: Material,
     val specialItemCustomModel: Int,
     val specialItemName: String,

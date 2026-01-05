@@ -81,6 +81,7 @@ class Settings(val plugin: MagReclaimShop) {
             valueNBTID = configuration.getString("value-nbt-id") ?: "",
             normalValueFormula = configuration.getString("normal-value-formula") ?: "",
             specialValueFormula = configuration.getString("special-value-formula") ?: "",
+            displayItemName = configuration.getString("display-item-name") ?: "",
             specialItemMaterial = Material.matchMaterial(configuration.getString("special-item-material") ?: "STONE") ?: Material.STONE,
             specialItemCustomModel = configuration.getInt("special-item-custom-model") ?: 0,
             specialItemName = configuration.getString("special-item-name") ?: "",

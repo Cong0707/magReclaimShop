@@ -9,6 +9,8 @@
   normal-value-formula: "0.5*50000/4^((5-v))"
   special-value-formula: "0.5*50000/4^((5-v))"
 
+  display-item-name: "底层牛皮"
+
   special-item-material: "paper"
   special-item-custom-model: "1200"
   special-item-name: "头层牛皮"
