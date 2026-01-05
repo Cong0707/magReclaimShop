@@ -157,8 +157,9 @@ object UIUtil {
                                             items.map { (slot, itemStack) ->
                                                     Settings.itemInfoFormat
                                                         .replace("%is-special%", if (specialValueMap.keys.contains(slot)) Settings.isSpecialFormat else Settings.notSpecialFormat)
-                                                        .replace("%item-display-name%", slotValueMap[slot]?.specialItemName ?: "")
-                                                        .replace("%amount%", itemStack!!.clone().amount.toString())
+                                                        .replace("%item-display-name%", itemStack!!.clone().displayName().toLegacy())
+                                                        .replace("%special-display-name%", slotValueMap[slot]?.specialItemName ?: "")
+                                                        .replace("%amount%", itemStack.clone().amount.toString())
                                                         .replace("%value-sum%", (if (specialValueMap.keys.contains(slot)) specialValueMap[slot] else normalValueMap[slot]).toString())
                                                 }
                                         } else {
