@@ -74,6 +74,7 @@ object UIUtil {
 
         val normalValueMap = mutableMapOf<Int, Double>()
         val specialValueMap = mutableMapOf<Int, Double>()
+        val slotValueMap = mutableMapOf<Int, Value>()
 
         openMenu<StorableChest>(title = shop.title) {
             rows(shop.layout.size)
@@ -118,11 +119,14 @@ object UIUtil {
 
                     specialValueMap.clear()
                     normalValueMap.clear()
+                    slotValueMap.clear()
 
                     items.forEach { item ->
                         shop.supportItems.forEach { supportItem ->
                             val value = checkItemValue(item.second!!, supportItem)!!
                             val special = specialItems.contains(supportItem)
+
+                            slotValueMap[item.first] = supportItem
 
                             val formula = if (special) {
                                 supportItem.specialValueFormula
@@ -153,8 +157,8 @@ object UIUtil {
                                             items.map { (slot, itemStack) ->
                                                     Settings.itemInfoFormat
                                                         .replace("%is-special%", if (specialValueMap.keys.contains(slot)) Settings.isSpecialFormat else Settings.notSpecialFormat)
-                                                        .replace("%item-display-name%", itemStack!!.clone().displayName().toLegacy())
-                                                        .replace("%amount%", itemStack.clone().amount.toString())
+                                                        .replace("%item-display-name%", slotValueMap[slot]?.specialItemName ?: "")
+                                                        .replace("%amount%", itemStack!!.clone().amount.toString())
                                                         .replace("%value-sum%", (if (specialValueMap.keys.contains(slot)) specialValueMap[slot] else normalValueMap[slot]).toString())
                                                 }
                                         } else {
