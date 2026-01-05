@@ -1,1 +1,1 @@
-rootProject.name = "magReclaimShop"
+rootProject.name = "MagReclaimShop"
