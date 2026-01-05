@@ -6,6 +6,7 @@ import io.cong.magReclaimShop.ui.UIUtil.openShop
 import org.bukkit.command.CommandSender
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.transactions.transaction
 import taboolib.common.platform.command.CommandBody
 import taboolib.common.platform.command.CommandHeader
 import taboolib.common.platform.command.subCommand
@@ -59,8 +60,10 @@ object MagReclaimShopCommand {
             execute<CommandSender> { sender, context, _ ->
                 val player = onlinePlayers.find { it.name == context["player"] } ?: return@execute
 
-                SpecialItemsDB.deleteWhere {
-                    SpecialItemsDB.uuid eq player.uniqueId.toString()
+                transaction {
+                    SpecialItemsDB.deleteWhere {
+                        uuid eq player.uniqueId.toString()
+                    }
                 }
 
                 sender.sendMessage("§a已清空玩家 ${player.name} 的全部商店热卖商品记录")
@@ -76,9 +79,11 @@ object MagReclaimShopCommand {
                     val player = onlinePlayers.find { it.name == context["player"] } ?: return@execute
                     val shop = plugin.shops.find { it.title == context["shop"] } ?: return@execute
 
-                    SpecialItemsDB.deleteWhere {
-                        (SpecialItemsDB.uuid eq player.uniqueId.toString()) and
-                                (SpecialItemsDB.shop eq shop.title)
+                    transaction {
+                        SpecialItemsDB.deleteWhere {
+                            (uuid eq player.uniqueId.toString()) and
+                                    (SpecialItemsDB.shop eq shop.title)
+                        }
                     }
 
                     sender.sendMessage("§a已清空玩家 ${player.name} 的商店 ${shop.title} 热卖商品记录")

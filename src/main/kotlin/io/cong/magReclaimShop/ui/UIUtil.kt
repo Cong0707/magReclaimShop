@@ -25,34 +25,33 @@ import taboolib.module.ui.type.StorableChest
 import taboolib.platform.util.buildItem
 import java.util.concurrent.atomic.AtomicBoolean
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.transactions.transaction
 
 object UIUtil {
     fun Player.openShop(shop: Shop) {
-        val record = SpecialItemsDB
-            .select {
-                (uuid eq uniqueId.toString()) and
-                        (SpecialItemsDB.shop eq shop.title)
+        val str = transaction {
+            val record = SpecialItemsDB
+                .select {
+                    (uuid eq uniqueId.toString()) and
+                            (SpecialItemsDB.shop eq shop.title)
+                }
+                .singleOrNull()
+
+            if (record != null) {
+                record[specialItemsRecord]
+            } else {
+                val count = (shop.specialMin..shop.specialMax).random()
+                val specialItems = shop.supportItems.shuffled().take(count)
+                val serialized = specialItems.map { it.name }.toString()
+
+                SpecialItemsDB.insert {
+                    it[uuid] = uniqueId.toString()
+                    it[SpecialItemsDB.shop] = shop.title
+                    it[specialItemsRecord] = serialized
+                }
+
+                serialized
             }
-            .singleOrNull()
-
-        val str = if (record != null) {
-            record[specialItemsRecord]
-        } else {
-            val count = (shop.specialMin..shop.specialMax).random()
-            val specialItems =
-                shop.supportItems
-                    .shuffled()
-                    .take(count)
-
-            val serialized = specialItems.map { it.name }.toString()
-
-            SpecialItemsDB.insert {
-                it[uuid] = uniqueId.toString()
-                it[SpecialItemsDB.shop] = shop.title
-                it[specialItemsRecord] = serialized
-            }
-
-            serialized
         }
 
         val specialItems = str
