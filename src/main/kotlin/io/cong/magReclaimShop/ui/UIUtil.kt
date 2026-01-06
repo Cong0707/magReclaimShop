@@ -26,6 +26,7 @@ import taboolib.module.ui.type.StorableChest
 import taboolib.platform.util.buildItem
 import java.util.concurrent.atomic.AtomicBoolean
 import taboolib.common5.scriptEngine
+import kotlin.math.roundToInt
 
 object UIUtil {
     fun Player.openShop(shop: Shop) {
@@ -72,8 +73,8 @@ object UIUtil {
                 if (index !in openSlots) index else null
             }
 
-        val normalValueMap = mutableMapOf<Int, Double>()
-        val specialValueMap = mutableMapOf<Int, Double>()
+        val normalValueMap = mutableMapOf<Int, Int>()
+        val specialValueMap = mutableMapOf<Int, Int>()
         val slotValueMap = mutableMapOf<Int, Value>()
 
         openMenu<StorableChest>(title = shop.title) {
@@ -137,9 +138,9 @@ object UIUtil {
                             val calValue = scriptEngine.eval(formula).toString().toDouble()
 
                             if (special) {
-                                specialValueMap.set(item.first, calValue * item.second!!.amount)
+                                specialValueMap.set(item.first, (calValue * item.second!!.amount).roundToInt())
                             } else {
-                                normalValueMap.set(item.first, calValue * item.second!!.amount)
+                                normalValueMap.set(item.first, (calValue * item.second!!.amount).roundToInt())
                             }
                         }
                     }
@@ -227,7 +228,7 @@ object UIUtil {
                     button.action.forEach {
                         val normalSum = normalValueMap.values.sum()
                         val specialSum = specialValueMap.values.sum()
-                        if (normalSum != 0.0 || specialSum != 0.0) {
+                        if (normalSum != 0 || specialSum != 0) {
                             console().performCommand(
                                 it.replace("%normal-value-sum%", normalSum.toString())
                                     .replace("%special-value-sum%", specialSum.toString())
