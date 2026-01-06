@@ -118,7 +118,7 @@ class Settings(val plugin: MagReclaimShop) {
                 type = type,
                 customMaterial = Material.matchMaterial(map["custom-material"] as? String ?: "STONE") ?: Material.STONE,
                 customName = map["custom-name"] as? String ?: "",
-                customModelData = (map["custom-model-data"] as? String)?.toIntOrNull() ?: 0,
+                customModelData = (map["custom-model-data"] as? Number)?.toInt() ?: 0,
                 customLore = map["custom-lore"] as? List<String> ?: emptyList(),
                 action = map["action"] as? List<String> ?: emptyList()
             )
