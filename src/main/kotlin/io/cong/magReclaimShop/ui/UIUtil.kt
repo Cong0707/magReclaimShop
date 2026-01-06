@@ -232,6 +232,7 @@ object UIUtil {
                             console().performCommand(
                                 it.replace("%normal-value-sum%", normalSum.toString())
                                     .replace("%special-value-sum%", specialSum.toString())
+                                    .replace("%player_name%", this@openShop.name)
                             )
 
                             val valueAmountMap = mutableMapOf<Value, Int>()
