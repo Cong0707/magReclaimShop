@@ -8,10 +8,11 @@ import io.cong.magReclaimShop.database.SpecialItemsDB.uuid
 import io.cong.magReclaimShop.types.Shop
 import io.cong.magReclaimShop.types.Value
 import io.cong.magReclaimShop.utils.TextUtil.format
-import io.cong.magReclaimShop.utils.TextUtil.toLegacy
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.transactions.transaction
 import taboolib.common.platform.function.adaptCommandSender
 import taboolib.common.platform.function.console
 import taboolib.module.kether.KetherShell.eval
@@ -24,8 +25,7 @@ import taboolib.module.ui.returnItems
 import taboolib.module.ui.type.StorableChest
 import taboolib.platform.util.buildItem
 import java.util.concurrent.atomic.AtomicBoolean
-import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.transactions.transaction
+import taboolib.common5.scriptEngine
 
 object UIUtil {
     fun Player.openShop(shop: Shop) {
@@ -134,7 +134,7 @@ object UIUtil {
                                 supportItem.normalValueFormula
                             }.replace("v", value)
 
-                            val calValue = eval("calculate $formula").get().toString().toDouble()
+                            val calValue = scriptEngine.eval(formula).toString().toDouble()
 
                             if (special) {
                                 specialValueMap.set(item.first, calValue * item.second!!.amount)

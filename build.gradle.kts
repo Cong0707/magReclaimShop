@@ -39,6 +39,9 @@ dependencies {
 
     taboo("com.h2database:h2:2.2.224")
     taboo("com.mysql:mysql-connector-j:8.0.33")
+
+    taboo("org.ow2.asm:asm:9.6")
+    taboo("org.ow2.asm:asm-util:9.6") // 这里包含 Printer 类
 }
 
 taboolib {
@@ -55,7 +58,7 @@ taboolib {
         install(Basic, Bukkit)
         install(BukkitNMS, BukkitNMSUtil, BukkitFakeOp)
         install(MinecraftChat, I18n)
-        install(Kether)
+        install(Kether, JavaScript)
         install(BukkitHook)
         install(BukkitNavigation, BukkitUI, BukkitUtil)
     }

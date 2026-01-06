@@ -6,8 +6,8 @@
 
   value-nbt-id: "magrdi.level"
 
-  normal-value-formula: "0.5*50000/4^((5-v))"
-  special-value-formula: "0.5*50000/4^((5-v))"
+  normal-value-formula: "0.5 * 50000 / Math.pow(4, (5 - v))"
+  special-value-formula: "0.5 * 50000 / Math.pow(4, (5 - v))"
 
   display-item-name: "底层牛皮"
 
