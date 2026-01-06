@@ -125,6 +125,7 @@ class Settings(val plugin: MagReclaimShop) {
         }
 
         return Shop(
+            name = configuration.getString("name") ?: "shop1",
             title = configuration.getString("title") ?: "shop",
             supportItems = supportItems,
             specialMin = configuration.getInt("special-min"),

@@ -23,19 +23,19 @@ object MagReclaimShopCommand {
     val open = subCommand {
         dynamic("ui") {
             suggestion<CommandSender> { _, _ ->
-                plugin.shops.map { it.title }
+                plugin.shops.map { it.name }
             }
             dynamic("player") {
                 suggestPlayers()
                 execute<CommandSender> { sender, context, _ ->
                     val player = onlinePlayers.find { it.name == context["player"] } ?: return@execute
-                    val ui = plugin.shops.find { it.title == context["ui"] } ?: return@execute
+                    val ui = plugin.shops.find { it.name == context["ui"] } ?: return@execute
                     player.openShop(ui)
                 }
             }
             execute<CommandSender> { sender, context, _ ->
                 val player = onlinePlayers.find { it.name == sender.name } ?: return@execute
-                val ui = plugin.shops.find { it.title == context["ui"] } ?: return@execute
+                val ui = plugin.shops.find { it.name == context["ui"] } ?: return@execute
                 player.openShop(ui)
             }
         }
@@ -72,21 +72,21 @@ object MagReclaimShopCommand {
             // /magrs clear <player> <shop>
             dynamic("shop") {
                 suggestion<CommandSender> { _, _ ->
-                    plugin.shops.map { it.title }
+                    plugin.shops.map { it.name }
                 }
 
                 execute<CommandSender> { sender, context, _ ->
                     val player = onlinePlayers.find { it.name == context["player"] } ?: return@execute
-                    val shop = plugin.shops.find { it.title == context["shop"] } ?: return@execute
+                    val shop = plugin.shops.find { it.name == context["shop"] } ?: return@execute
 
                     transaction {
                         SpecialItemsDB.deleteWhere {
                             (uuid eq player.uniqueId.toString()) and
-                                    (SpecialItemsDB.shop eq shop.title)
+                                    (SpecialItemsDB.shop eq shop.name)
                         }
                     }
 
-                    sender.sendMessage("§a已清空玩家 ${player.name} 的商店 ${shop.title} 热卖商品记录")
+                    sender.sendMessage("§a已清空玩家 ${player.name} 的商店 ${shop.name} 热卖商品记录")
                 }
             }
         }

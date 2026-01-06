@@ -1,5 +1,6 @@
 shop1:
-  title: "shop"
+  name: "test_shop"
+  title: "te st sh op"
   support-items:
     - "value1"
   special-min: 1

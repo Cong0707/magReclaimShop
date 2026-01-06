@@ -33,7 +33,7 @@ object UIUtil {
             val record = SpecialItemsDB
                 .select {
                     (uuid eq uniqueId.toString()) and
-                            (SpecialItemsDB.shop eq shop.title)
+                            (SpecialItemsDB.shop eq shop.name)
                 }
                 .singleOrNull()
 
@@ -46,7 +46,7 @@ object UIUtil {
 
                 SpecialItemsDB.insert {
                     it[uuid] = uniqueId.toString()
-                    it[SpecialItemsDB.shop] = shop.title
+                    it[SpecialItemsDB.shop] = shop.name
                     it[specialItemsRecord] = serialized
                 }
 

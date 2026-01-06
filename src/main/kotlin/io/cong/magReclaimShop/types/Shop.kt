@@ -1,6 +1,7 @@
 package io.cong.magReclaimShop.types
 
 data class Shop(
+    val name: String,
     val title: String,
     val supportItems: List<Value>,
     val specialMin: Int,
