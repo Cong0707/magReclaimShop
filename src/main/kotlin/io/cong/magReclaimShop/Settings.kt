@@ -127,7 +127,7 @@ class Settings(val plugin: MagReclaimShop) {
         return Shop(
             name = configuration.getString("name") ?: "shop1",
             title = configuration.getString("title") ?: "shop",
-            please = configuration.getString("release") ?: "请输入文本",
+            please = configuration.getString("please") ?: "请输入文本",
             supportItems = supportItems,
             specialMin = configuration.getInt("special-min"),
             specialMax = configuration.getInt("special-max"),
