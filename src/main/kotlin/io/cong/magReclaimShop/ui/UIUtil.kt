@@ -123,8 +123,8 @@ object UIUtil {
                     slotValueMap.clear()
 
                     items.forEach { item ->
-                        shop.supportItems.forEach { supportItem ->
-                            val value = checkItemValue(item.second!!, supportItem)!!
+                        shop.supportItems.forEach support@{ supportItem ->
+                            val value = checkItemValue(item.second!!, supportItem) ?: return@support
                             val special = specialItems.contains(supportItem)
 
                             slotValueMap[item.first] = supportItem

@@ -1,0 +1,164 @@
+clss_千丝股:
+  name: "clss_千丝股"
+  config-nbt-value: "clss_千丝股"
+  display-item-name: "<font:message_8><white>千丝股"
+
+  normal-value-formula: "0.35*(16000 / Math.pow(4, 5 - v))"
+  special-value-formula: "0.5*(16000 / Math.pow(4, 5 - v))"
+
+  special-item-material: "slime_ball"
+  special-item-custom-model: "3006"
+  special-item-name: "<font:message_8><white>夐 千丝股 [热卖商品!收益+40%]"
+
+  config-nbt-id: "magrdi.id"
+  value-nbt-id: "magrdi.level"
+
+clss_棉绳:
+  name: "clss_棉绳"
+  config-nbt-value: "clss_棉绳"
+  display-item-name: "<font:message_8><white>棉绳"
+
+  normal-value-formula: "0.35*(2700 / Math.pow(4, 5 - v))"
+  special-value-formula: "0.5*(2700 / Math.pow(4, 5 - v))"
+
+  special-item-material: "slime_ball"
+  special-item-custom-model: "3004"
+  special-item-name: "<font:message_8><white>夐 棉绳 [热卖商品!收益+40%]"
+
+  config-nbt-id: "magrdi.id"
+  value-nbt-id: "magrdi.level"
+
+clss_菌丝:
+  name: "clss_菌丝"
+  config-nbt-value: "clss_菌丝"
+  display-item-name: "<font:message_8><white>菌丝"
+
+  normal-value-formula: "0.35*(1800 / Math.pow(4, 5 - v))"
+  special-value-formula: "0.5*(1800 / Math.pow(4, 5 - v))"
+
+  special-item-material: "slime_ball"
+  special-item-custom-model: "3003"
+  special-item-name: "<font:message_8><white>夐 菌丝 [热卖商品!收益+40%]"
+
+  config-nbt-id: "magrdi.id"
+  value-nbt-id: "magrdi.level"
+
+clss_蚕丝:
+  name: "clss_蚕丝"
+  config-nbt-value: "clss_蚕丝"
+  display-item-name: "<font:message_8><white>蚕丝"
+
+  normal-value-formula: "0.35*(4500 / Math.pow(4, 5 - v))"
+  special-value-formula: "0.5*(4500 / Math.pow(4, 5 - v))"
+
+  special-item-material: "slime_ball"
+  special-item-custom-model: "3010"
+  special-item-name: "<font:message_8><white>夐 蚕丝 [热卖商品!收益+40%]"
+
+  config-nbt-id: "magrdi.id"
+  value-nbt-id: "magrdi.level"
+
+clss_蛛丝:
+  name: "clss_蛛丝"
+  config-nbt-value: "clss_蛛丝"
+  display-item-name: "<font:message_8><white>蛛丝"
+
+  normal-value-formula: "0.35*(3000 / Math.pow(4, 5 - v))"
+  special-value-formula: "0.5*(3000 / Math.pow(4, 5 - v))"
+
+  special-item-material: "slime_ball"
+  special-item-custom-model: "3009"
+  special-item-name: "<font:message_8><white>夐 蛛丝 [热卖商品!收益+40%]"
+
+  config-nbt-id: "magrdi.id"
+  value-nbt-id: "magrdi.level"
+
+clss_迅捷狼羽:
+  name: "clss_迅捷狼羽"
+  config-nbt-value: "clss_迅捷狼羽"
+  display-item-name: "<font:message_8><white>迅捷狼羽"
+
+  normal-value-formula: "0.35*(9000 / Math.pow(4, 5 - v))"
+  special-value-formula: "0.5*(9000 / Math.pow(4, 5 - v))"
+
+  special-item-material: "slime_ball"
+  special-item-custom-model: "3008"
+  special-item-name: "<font:message_8><white>夐 迅捷狼羽 [热卖商品!收益+40%]"
+
+  config-nbt-id: "magrdi.id"
+  value-nbt-id: "magrdi.level"
+
+clss_金菌丝:
+  name: "clss_金菌丝"
+  config-nbt-value: "clss_金菌丝"
+  display-item-name: "<font:message_8><white>金菌丝"
+
+  normal-value-formula: "0.35*(9000 / Math.pow(4, 5 - v))"
+  special-value-formula: "0.5*(9000 / Math.pow(4, 5 - v))"
+
+  special-item-material: "slime_ball"
+  special-item-custom-model: "3002"
+  special-item-name: "<font:message_8><white>夐 金菌丝 [热卖商品!收益+40%]"
+
+  config-nbt-id: "magrdi.id"
+  value-nbt-id: "magrdi.level"
+
+clss_铁丝:
+  name: "clss_铁丝"
+  config-nbt-value: "clss_铁丝"
+  display-item-name: "<font:message_8><white>铁丝"
+
+  normal-value-formula: "0.35*(2700 / Math.pow(4, 5 - v))"
+  special-value-formula: "0.5*(2700 / Math.pow(4, 5 - v))"
+
+  special-item-material: "slime_ball"
+  special-item-custom-model: "3007"
+  special-item-name: "<font:message_8><white>夐 铁丝 [热卖商品!收益+40%]"
+
+  config-nbt-id: "magrdi.id"
+  value-nbt-id: "magrdi.level"
+
+clss_铁链条:
+  name: "clss_铁链条"
+  config-nbt-value: "clss_铁链条"
+  display-item-name: "<font:message_8><white>铁链条"
+
+  normal-value-formula: "0.35*(4500 / Math.pow(4, 5 - v))"
+  special-value-formula: "0.5*(4500 / Math.pow(4, 5 - v))"
+
+  special-item-material: "slime_ball"
+  special-item-custom-model: "3011"
+  special-item-name: "<font:message_8><white>夐 铁链条 [热卖商品!收益+40%]"
+
+  config-nbt-id: "magrdi.id"
+  value-nbt-id: "magrdi.level"
+
+clss_魔力藤缎:
+  name: "clss_魔力藤缎"
+  config-nbt-value: "clss_魔力藤缎"
+  display-item-name: "<font:message_8><white>魔力藤缎"
+
+  normal-value-formula: "0.35*(16000 / Math.pow(4, 5 - v))"
+  special-value-formula: "0.5*(16000 / Math.pow(4, 5 - v))"
+
+  special-item-material: "slime_ball"
+  special-item-custom-model: "3005"
+  special-item-name: "<font:message_8><white>夐 魔力藤缎 [热卖商品!收益+40%]"
+
+  config-nbt-id: "magrdi.id"
+  value-nbt-id: "magrdi.level"
+
+clss_黑熊筋:
+  name: "clss_黑熊筋"
+  config-nbt-value: "clss_黑熊筋"
+  display-item-name: "<font:message_8><white>黑熊筋"
+
+  normal-value-formula: "0.35*(10000 / Math.pow(4, 5 - v))"
+  special-value-formula: "0.5*(10000 / Math.pow(4, 5 - v))"
+
+  special-item-material: "slime_ball"
+  special-item-custom-model: "3001"
+  special-item-name: "<font:message_8><white>夐 黑熊筋 [热卖商品!收益+40%]"
+
+  config-nbt-id: "magrdi.id"
+  value-nbt-id: "magrdi.level"

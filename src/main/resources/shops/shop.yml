@@ -1,19 +1,28 @@
-shop1:
-  name: "test_shop"
-  title: "te st sh op"
-  please: "请输入文本"
+平流区丝绳回收:
+  name: "平流区丝绳回收"
+  title: "§f斄"
   support-items:
-    - "value1"
-  special-min: 1
-  special-max: 5
+    - "clss_千丝股"
+    - "clss_棉绳"
+    - "clss_菌丝"
+    - "clss_蚕丝"
+    - "clss_蛛丝"
+    - "clss_迅捷狼羽"
+    - "clss_金菌丝"
+    - "clss_铁丝"
+    - "clss_铁链条"
+    - "clss_魔力藤缎"
+    - "clss_黑熊筋"
+  special-min: 4
+  special-max: 8
 
   layout:
-    - '****xxxxx'
-    - '****xxxxx'
-    - '****xxxxx'
-    - '****xxxxx'
-    - 'aaaaaaaaa'
-    - '   yyy   '
+    - '    xxxxx'
+    - '    xxxxx'
+    - '    xxxxx'
+    - '    xxxxx'
+    - 'aaaaxxxxx'
+    - 'aaaa yyy '
 
   buttons:
     - key: "x"
@@ -25,21 +34,13 @@ shop1:
     - key: "y"
       type: confirm
       custom-material: paper
+      custom-model-data: 3048
+      custom-name: "<font:message_8><white>夈 出售商品"
       custom-lore:
         - "本次非特别商品的价值 %normal-value-sum%"
         - "本次特别商品的价值 %special-value-sum%"
         - ""
         - "%item-info%" #in config.yml
-      custom-name: "确定"
-      custom-model-data: 0
       action:
-        - "command say %normal-value-sum% %special-value-sum%"
-
-    - key: "*"
-      type: decoration
-      custom-material: red_stained_glass_pane
-      custom-name: ""
-      custom-lore:
-        - ""
-      custom-model-data: 0
-      action:
+        - "globalfeature minimessage %player_name% <font:icons>夎<#9bd32c><font:message_8>热卖商品所得金币+%special-value-sum%"
+        - "globalfeature minimessage %player_name% <font:icons>夎<#9bd32c><font:message_8>普通商品所得金币+%normal-value-sum%"
