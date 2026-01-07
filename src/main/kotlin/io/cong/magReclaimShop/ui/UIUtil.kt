@@ -220,7 +220,7 @@ object UIUtil {
                         lore(button.customLore.map { format(
                             it.replace("%normal-value-sum%", "0")
                                 .replace("%special-value-sum%", "0")
-                                .replace("%item-info%", "请放入商品")
+                                .replace("%item-info%", shop.please)
                         ) })
                         itemMeta = this
                     }

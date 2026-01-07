@@ -1,6 +1,7 @@
 shop1:
   name: "test_shop"
   title: "te st sh op"
+  please: "请输入文本"
   support-items:
     - "value1"
   special-min: 1
