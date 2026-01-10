@@ -115,10 +115,18 @@ object UIUtil {
 
                 writeItem { inventory, itemStack, slot, type ->
                     if (type.isRightClick) {
-                        // 右键只放 1 个
-                        val one = itemStack.clone()
-                        one.amount = 1
-                        inventory.setItem(slot, one)
+                        val exist = inventory.getItem(slot)
+
+                        if (exist == null || exist.type == Material.AIR) {
+                            // 空槽：放 1 个
+                            val one = itemStack.clone()
+                            one.amount = 1
+                            inventory.setItem(slot, one)
+                        } else {
+                            // 非空：数量 +1
+                            exist.amount += 1
+                            inventory.setItem(slot, exist)
+                        }
 
                         // 光标物品 -1
                         itemStack.amount -= 1
