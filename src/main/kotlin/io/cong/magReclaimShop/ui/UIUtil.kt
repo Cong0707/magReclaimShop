@@ -114,7 +114,21 @@ object UIUtil {
                 }
 
                 writeItem { inventory, itemStack, slot, type ->
-                    inventory.setItem(slot, itemStack.clone())
+                    if (type.isRightClick) {
+                        // 右键只放 1 个
+                        val one = itemStack.clone()
+                        one.amount = 1
+                        inventory.setItem(slot, one)
+
+                        // 光标物品 -1
+                        itemStack.amount -= 1
+                        if (itemStack.amount > 0) {
+                            setItemOnCursor(itemStack)
+                        }
+                    } else {
+                        // 左键正常整组
+                        inventory.setItem(slot, itemStack.clone())
+                    }
 
                     val items = openSlots.filter { inventory.getItem(it) != null }.map { it to inventory.getItem(it) }
 
