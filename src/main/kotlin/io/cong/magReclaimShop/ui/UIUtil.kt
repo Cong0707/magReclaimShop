@@ -11,10 +11,13 @@ import io.cong.magReclaimShop.utils.TextUtil.format
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import taboolib.common.platform.function.adaptCommandSender
 import taboolib.common.platform.function.console
+import taboolib.common5.scriptEngine
 import taboolib.module.kether.KetherShell.eval
 import taboolib.module.kether.ScriptOptions
 import taboolib.module.nms.getItemTag
@@ -25,7 +28,6 @@ import taboolib.module.ui.returnItems
 import taboolib.module.ui.type.StorableChest
 import taboolib.platform.util.buildItem
 import java.util.concurrent.atomic.AtomicBoolean
-import taboolib.common5.scriptEngine
 import kotlin.math.roundToInt
 
 object UIUtil {
@@ -83,6 +85,11 @@ object UIUtil {
             map(*shop.layout.toTypedArray())
 
             onClick(lock = false) { event ->
+
+                event.onDrag {
+                    event.isCancelled = true
+                }
+
                 openSlots.forEach { slot ->
                     event.conditionSlot(slot,
                         condition = { put, out ->
@@ -143,7 +150,7 @@ object UIUtil {
                                 inventory.setItem(slot, exist)
 
                                 itemStack.amount -= 1
-                                if (itemStack.amount > 0) setItemOnCursor(itemStack)
+                                if (itemStack.amount > 0) setItemOnCursor(itemStack) else setItemOnCursor(null)
                             }
                         }
                     } else {
