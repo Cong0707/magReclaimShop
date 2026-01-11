@@ -115,7 +115,8 @@ object UIUtil {
 
                 writeItem { inventory, itemStack, slot, type ->
                     if (type.isRightClick) {
-                        val exist = inventory.getItem(slot)
+                        return@writeItem
+                        /*val exist = inventory.getItem(slot)
 
                         if (exist == null || exist.type == Material.AIR) {
                             // 空槽：放 1 个
@@ -132,7 +133,7 @@ object UIUtil {
                         itemStack.amount -= 1
                         if (itemStack.amount > 0) {
                             setItemOnCursor(itemStack)
-                        }
+                        }*/
                     } else {
                         // 左键正常整组
                         inventory.setItem(slot, itemStack.clone())
