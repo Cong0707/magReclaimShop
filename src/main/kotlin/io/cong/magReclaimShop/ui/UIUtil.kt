@@ -115,25 +115,37 @@ object UIUtil {
 
                 writeItem { inventory, itemStack, slot, type ->
                     if (type.isRightClick) {
-                        return@writeItem
-                        /*val exist = inventory.getItem(slot)
+                        val exist = inventory.getItem(slot)
 
                         if (exist == null || exist.type == Material.AIR) {
                             // 空槽：放 1 个
                             val one = itemStack.clone()
                             one.amount = 1
                             inventory.setItem(slot, one)
-                        } else {
-                            // 非空：数量 +1
-                            exist.amount += 1
-                            inventory.setItem(slot, exist)
-                        }
 
-                        // 光标物品 -1
-                        itemStack.amount -= 1
-                        if (itemStack.amount > 0) {
-                            setItemOnCursor(itemStack)
-                        }*/
+                            itemStack.amount -= 1
+                            if (itemStack.amount > 0) setItemOnCursor(itemStack)
+                        } else {
+                            if (itemStack.amount == 0) {
+                                // 鼠标空 → 拆半
+                                val total = exist.amount
+                                val take = total / 2 + total % 2 // 拆一半，奇数多一
+                                val remain = total - take
+
+                                val clone = exist.clone()
+                                clone.amount = take
+                                setItemOnCursor(clone)      // 放到鼠标
+                                exist.amount = remain
+                                if (remain > 0) inventory.setItem(slot, exist) else inventory.setItem(slot, null)
+                            } else {
+                                // 鼠标有物品 → +1
+                                exist.amount += 1
+                                inventory.setItem(slot, exist)
+
+                                itemStack.amount -= 1
+                                if (itemStack.amount > 0) setItemOnCursor(itemStack)
+                            }
+                        }
                     } else {
                         // 左键正常整组
                         inventory.setItem(slot, itemStack.clone())
